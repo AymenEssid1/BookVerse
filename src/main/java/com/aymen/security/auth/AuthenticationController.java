@@ -39,4 +39,5 @@ public class AuthenticationController {
     ) throws IOException {
         service.refreshToken(request, response);
     }
+
 }

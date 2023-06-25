@@ -18,7 +18,7 @@ public class SecurityApplication {
 	}
 
 
-	@Bean
+	/*@Bean
 	public CommandLineRunner commandLineRunner(
 			AuthenticationService service
 	) {
@@ -42,5 +42,5 @@ public class SecurityApplication {
 			System.out.println("user token: " + service.register(user).getAccessToken());
 
 		};
-	}
+	}*/
 }
