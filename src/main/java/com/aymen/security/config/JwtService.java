@@ -30,7 +30,7 @@ public class JwtService {
         return extractClaim(jwttoken,Claims::getSubject);
     }
 
-    
+
 
     public <T> T extractClaim(String token , Function<Claims, T > claimsResolver){
         final Claims claims = extracAllClaims(token);

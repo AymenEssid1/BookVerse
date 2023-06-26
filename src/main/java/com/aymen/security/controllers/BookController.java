@@ -1,9 +1,7 @@
 package com.aymen.security.controllers;
 
 
-import com.aymen.security.book.Book;
-import com.aymen.security.book.BookService;
-import com.aymen.security.book.Category;
+import com.aymen.security.book.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +15,11 @@ import java.util.Optional;
 @RequestMapping("/api/v1/book")
 public class BookController {
     private final BookService bookService;
+
+
+    @Autowired
+    private ReviewService reviewService;
+
 
     @Autowired
     public BookController(BookService bookService) {
@@ -83,5 +86,15 @@ public class BookController {
         }
     }
 
+    @PostMapping("/{bookId}/reviews")
+    @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read') ")
+    public ResponseEntity<Book>  addReviewToBook(
+            @PathVariable Integer bookId,
+            @RequestParam Integer userId,
+            @RequestParam Integer rating) {
 
+        Book ch = reviewService.addReviewToBook(bookId, userId, rating);
+
+        return ResponseEntity.ok(ch);
+    }
 }
