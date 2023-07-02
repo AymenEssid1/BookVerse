@@ -1,5 +1,6 @@
 package com.aymen.security.config;
 
+import com.aymen.security.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -46,6 +47,8 @@ public class JwtService {
             Map<String, Object> extraClaims,
             UserDetails userDetails
     ) {
+        User user = (User) userDetails;
+        extraClaims.put("role", user.getRole());
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
@@ -83,6 +86,13 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+    private String extractNameFromToken(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+
+
 
 
     private Claims extracAllClaims(String jwttoken){

@@ -28,6 +28,7 @@ public class Book {
     private String description;
     private double price;
     private int quantity;
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -35,8 +36,9 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-
     private Double averageReview;
+
+
 
 
 }

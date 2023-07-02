@@ -1,6 +1,7 @@
 package com.aymen.security.user;
 
 
+import com.aymen.security.purchase.Cart;
 import com.aymen.security.token.Token;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,9 @@ public class User implements UserDetails { //implement user details by alt+enter
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
+   /* @OneToOne
+    private Cart cart;*/
 
 
     @Override
