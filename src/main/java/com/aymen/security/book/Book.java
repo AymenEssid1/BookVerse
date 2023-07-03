@@ -1,7 +1,7 @@
 package com.aymen.security.book;
 
 
-import com.aymen.security.user.Role;
+import com.aymen.security.book.image.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "book")
 public class Book {
-    @JsonIgnore
+
     @Id
     @GeneratedValue
     private Integer id;
@@ -32,6 +32,7 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
@@ -39,6 +40,9 @@ public class Book {
     private Double averageReview;
 
 
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Image image;
 
 
 }

@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.media.Schema;
 
 @OpenAPIDefinition(
         info = @Info(
@@ -41,4 +44,17 @@ import io.swagger.v3.oas.annotations.servers.Server;
         in = SecuritySchemeIn.HEADER
 )
 public class OpenApiConfig {
+
+
+        public OpenAPI customOpenAPI() {
+                Schema<String> binarySchema = new Schema<>();
+                binarySchema.setType("string");
+                binarySchema.setFormat("binary");
+
+                Components components = new Components();
+                components.addSchemas("binaryData", binarySchema);
+
+                return new OpenAPI()
+                        .components(components);
+        }
 }

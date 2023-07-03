@@ -38,7 +38,10 @@ public class SecurityConfiguration {
         http
                 .csrf()
                 .disable()
+                .cors() // Enable CORS configuration
+                .and()
                 .authorizeHttpRequests()
+               // .anyRequest().permitAll();
                 .requestMatchers(
                         "/api/v1/auth/**",
                         "/v2/api-docs",
@@ -50,7 +53,8 @@ public class SecurityConfiguration {
                         "/configuration/security",
                         "/swagger-ui/**",
                         "/webjars/**",
-                        "/swagger-ui.html"
+                        "/swagger-ui.html",
+                        "/api/v1/book/image/*"
                 )   //whitelist these no auth required
                 .permitAll()
                 .requestMatchers("/api/v1/book/**").hasAnyRole(ADMIN.name(), USER.name())
