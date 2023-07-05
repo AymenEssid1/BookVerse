@@ -82,5 +82,23 @@ public class BookService {
     }
 
 
+    public boolean isBookNameExists(String name) {
+        Optional<Book> existingBook = this.findByNameIgnoreCase(name.trim());
+        return existingBook.isPresent();
+    }
+
+    public Optional<Book> findByNameIgnoreCase(String searchName) {
+        List<Book> allBooks = bookRepository.findAll();
+        String modifiedSearchName = searchName.replaceAll("\\s", "").toLowerCase();
+
+        for (Book book : allBooks) {
+            String modifiedBookName = book.getName().replaceAll("\\s", "").toLowerCase();
+            if (modifiedBookName.equals(modifiedSearchName)) {
+                return Optional.of(book);
+            }
+        }
+
+        return Optional.empty();
+    }
 
 }

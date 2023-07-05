@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -54,6 +56,14 @@ public class BookController {
         }
     }
 
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getCategories() {
+        List<String> categories = Arrays.stream(Category.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categories);
+    }
+
     @GetMapping("/Catalogue")
     @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read') ")
     public ResponseEntity<List<Book>> getAllBooks()  {
@@ -73,6 +83,21 @@ public class BookController {
         }
     }
 */
+
+    @PutMapping(value="/update-image/{bookId}",consumes = "multipart/form-data")
+    public ResponseEntity<Image> updateImage(@PathVariable Integer bookId, @RequestBody MultipartFile file) {
+        try {
+            Book u =bookService.getBookById(bookId).orElse(null);///fix this shit later
+            System.out.println(u.getImage().getId());
+            long imageId=u.getImage().getId();
+
+            Image updatedImage = iFileLocationService.update(imageId, file);
+            return ResponseEntity.ok(updatedImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping(value = "/image/{bookId}")
     public ResponseEntity<FileSystemResource> downloadImage(@PathVariable Integer bookId) {
         try {
@@ -84,9 +109,9 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping(value = "/addBookV2",consumes = "multipart/form-data")
+    @PostMapping(value = "/addBookV2", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<Book> createBookV2(@RequestBody MultipartFile image ,
+    public ResponseEntity<Book> createBookV2(@RequestBody MultipartFile image,
                                              @RequestParam String name,
                                              @RequestParam String author,
                                              @RequestParam String description,
@@ -95,9 +120,13 @@ public class BookController {
                                              @RequestParam Category category,
                                              @RequestParam double averageReview) {
         try {
+            // Check if the book name already exists
+            if (bookService.isBookNameExists(name)) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Return conflict status if the name already exists
+            }
+
             // Save the image file
             Image savedImageData = iFileLocationService.save(image);
-
 
             // Set the image details in the book object
             Book book = new Book();
