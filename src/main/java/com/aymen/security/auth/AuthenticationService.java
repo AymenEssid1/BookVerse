@@ -1,6 +1,7 @@
 package com.aymen.security.auth;
 
 
+import com.aymen.security.book.Book;
 import com.aymen.security.config.JwtService;
 import com.aymen.security.token.Token;
 import com.aymen.security.token.TokenRepository;
@@ -19,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +44,25 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .build();
+        var savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+
+                .build();
+    }
+
+    public AuthenticationResponse register(RegisterRequest request ,Role role) {
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(role)
                 .build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -123,4 +145,10 @@ public class AuthenticationService {
     }
 
 
+
+
+    public boolean userExistsByEmail(String email) {
+        System.out.println(repository.findByEmail(email));
+        return (repository.findByEmail(email).isPresent());
+    }
 }

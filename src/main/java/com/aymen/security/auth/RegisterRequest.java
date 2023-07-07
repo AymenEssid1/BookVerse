@@ -2,6 +2,7 @@ package com.aymen.security.auth;
 
 
 import com.aymen.security.user.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class RegisterRequest {
     private String lastname;
     private String email;
     private String password;
+    @JsonIgnore
     private Role role;
 
 }

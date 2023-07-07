@@ -3,6 +3,7 @@ package com.aymen.security.user;
 
 import com.aymen.security.purchase.Cart;
 import com.aymen.security.token.Token;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,13 +36,22 @@ public class User implements UserDetails { //implement user details by alt+enter
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
-    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;
 
    /* @OneToOne
     private Cart cart;*/
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", role=" + role +
+                '}';
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
