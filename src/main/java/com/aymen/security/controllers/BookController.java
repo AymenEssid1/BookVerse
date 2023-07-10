@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -138,6 +139,7 @@ public class BookController {
             book.setQuantity(quantity);
             book.setCategory(category);
             book.setAverageReview(averageReview);
+            book.setCreatedAt(LocalDateTime.now());
 
             // Create the book
             Book createdBook = bookService.createBook(book);
@@ -149,15 +151,21 @@ public class BookController {
     }
 
 
-
     @PutMapping("/updateBook/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-    public ResponseEntity<Book> updateBook(@PathVariable Integer id, @RequestBody Book updatedBook) {
-        Book updated = bookService.updateBook(id, updatedBook);
-        return updated != null
-                ? new ResponseEntity<>(updated, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> updateBook(@PathVariable Integer id, @RequestBody Book updatedBook) {
+        try {
+            Book updated = bookService.updateBook(id, updatedBook);
+            if (updated != null) {
+                return ResponseEntity.ok(updated);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
+
 
     @DeleteMapping("/RemoveBook/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")

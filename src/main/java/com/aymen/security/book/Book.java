@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,10 @@ public class Book {
     private String description;
     private double price;
     private int quantity;
+
+    @JsonIgnore
+    private LocalDateTime createdAt;
+
 
     @Enumerated(EnumType.STRING)
     private Category category;

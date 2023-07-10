@@ -39,16 +39,33 @@ public class BookService {
         Optional<Book> existingBookOptional = bookRepository.findById(id);
         if (existingBookOptional.isPresent()) {
             Book existingBook = existingBookOptional.get();
-            existingBook.setName(updatedBook.getName());
+
+            String updatedName = updatedBook.getName();
+            String oldName = existingBook.getName();
+
+            // Check if the updated name is different from the old name
+            if (!updatedName.equals(oldName)) {
+                // Check if the updated name already exists in the database
+                boolean isNameTaken = this.isBookNameExists(updatedName);
+
+                if (isNameTaken) {
+                    throw new RuntimeException("Book name already exists in the database");
+                }
+            }
+
+            // Update the book properties
+            existingBook.setName(updatedName);
             existingBook.setAuthor(updatedBook.getAuthor());
             existingBook.setDescription(updatedBook.getDescription());
             existingBook.setPrice(updatedBook.getPrice());
             existingBook.setQuantity(updatedBook.getQuantity());
             existingBook.setCategory(updatedBook.getCategory());
+
             return bookRepository.save(existingBook);
         }
         return null;
     }
+
 
     public boolean deleteBook(Integer id) {
         Optional<Book> bookOptional = bookRepository.findById(id);
