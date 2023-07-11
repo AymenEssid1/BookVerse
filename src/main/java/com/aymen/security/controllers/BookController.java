@@ -43,7 +43,15 @@ public class BookController {
         this.bookService = bookService;
     }
 
-
+    @GetMapping("getAllAuthors")
+    public List<String> getAllAuthors() {
+        List<Book> books = bookService. getAllBooks();
+        List<String> authors = books.stream()
+                .map(Book::getAuthor)
+                .distinct()
+                .collect(Collectors.toList());
+        return authors;
+    }
     @GetMapping("getbookby/{id}")
     @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read') ")
     public ResponseEntity<Book> getBookById(@PathVariable Integer id) {

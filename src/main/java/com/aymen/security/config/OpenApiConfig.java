@@ -18,16 +18,13 @@ import io.swagger.v3.oas.models.media.Schema;
                 contact = @Contact(
                         name = "Aymen",
                         email = "aymen.essid@esprit.tn"
-
                 )
-
         ),
         servers = {
                 @Server(
                         description = "Local ENV",
                         url = "http://localhost:8080"
                 ),
-
         },
         security = {
                 @SecurityRequirement(

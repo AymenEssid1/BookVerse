@@ -31,7 +31,7 @@ public class Book {
     private double price;
     private int quantity;
 
-    @JsonIgnore
+
     private LocalDateTime createdAt;
 
 
