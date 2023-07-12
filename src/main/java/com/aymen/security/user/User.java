@@ -1,7 +1,7 @@
 package com.aymen.security.user;
 
 
-import com.aymen.security.purchase.Cart;
+import com.aymen.security.purchase.cart.Cart;
 import com.aymen.security.token.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -10,7 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -40,8 +39,12 @@ public class User implements UserDetails { //implement user details by alt+enter
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Token> tokens;
 
-   /* @OneToOne
-    private Cart cart;*/
+    @JsonIgnore
+    @OneToOne
+    private Cart cart;
+
+
+
 
     @Override
     public String toString() {
