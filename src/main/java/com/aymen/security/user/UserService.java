@@ -1,6 +1,8 @@
 package com.aymen.security.user;
 
 
+import com.aymen.security.purchase.cart.CartRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.List;
 public class UserService {
 
     public final UserRepository userRepository;
+    @Autowired
+    CartRepository cartRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -16,6 +20,7 @@ public class UserService {
 
 
     public void deleteUserById(Integer userId) {
+       cartRepository.deleteById(cartRepository.getCartByUserId(userId).getId());
         userRepository.deleteById(userId);
     }
 

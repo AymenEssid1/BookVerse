@@ -40,7 +40,7 @@ public class User implements UserDetails { //implement user details by alt+enter
     private List<Token> tokens;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private Cart cart;
 
 

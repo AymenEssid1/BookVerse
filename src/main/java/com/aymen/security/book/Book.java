@@ -2,6 +2,7 @@ package com.aymen.security.book;
 
 
 import com.aymen.security.book.image.Image;
+import com.aymen.security.purchase.item.Item;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,10 @@ public class Book {
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private Image image;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Item> items = new ArrayList<>();
 
 
 }
