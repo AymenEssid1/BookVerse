@@ -44,6 +44,7 @@ public class Order {
 
 
 
+    @Enumerated(EnumType.STRING)
 
     private PaymentStatus paymentStatus;
 

@@ -1,6 +1,7 @@
 package com.aymen.security.controllers;
 
 import com.aymen.security.purchase.order.Order;
+import com.aymen.security.purchase.order.OrderResponse;
 import com.aymen.security.purchase.order.OrderService;
 import com.aymen.security.user.User;
 import com.aymen.security.user.UserService;
@@ -32,12 +33,12 @@ public class OrderController {
 
     }
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestParam Integer id) {
+    public ResponseEntity<OrderResponse> createOrder(@RequestParam Integer id) {
         // Get the authenticated user
         User user = userService.getUserById(id);
 
         // Create the order
-        Order order = orderService.createOrder(user);
+        OrderResponse order = orderService.createOrder(user);
 
         // Return a success response
         return ResponseEntity.status(HttpStatus.CREATED).body(order);

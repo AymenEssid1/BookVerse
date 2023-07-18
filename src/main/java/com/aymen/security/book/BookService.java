@@ -119,4 +119,16 @@ public class BookService {
         return Optional.empty();
     }
 
+    public void reduceQuant(Integer id, Integer value) {
+       Book book = bookRepository.findById(id).orElse(null);
+       book.setQuantity(book.getQuantity()-value);
+       bookRepository.save(book);
+
+    }
+
+    public void increaseQuant(Integer id, Integer value) {
+        Book book = bookRepository.findById(id).orElse(null);
+        book.setQuantity(book.getQuantity()+value);
+        bookRepository.save(book);
+    }
 }
