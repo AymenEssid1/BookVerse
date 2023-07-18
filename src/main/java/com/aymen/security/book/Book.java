@@ -56,4 +56,21 @@ public class Book {
     private List<Item> items = new ArrayList<>();
 
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", author='" + author + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", createdAt=" + createdAt +
+                ", category=" + category +
+                ", averageReview=" + averageReview +
+
+                '}';
+    }
+
+
 }

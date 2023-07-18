@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                         "/webjars/**",
                         "/swagger-ui.html",
                         "/api/v1/book/image/*"
+
                 )   //whitelist these no auth required
                 .permitAll()
                 .requestMatchers("/api/v1/book/**").hasAnyRole(ADMIN.name(), USER.name())

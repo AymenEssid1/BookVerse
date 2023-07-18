@@ -49,6 +49,7 @@ public class JwtService {
     ) {
         User user = (User) userDetails;
         extraClaims.put("role", user.getRole());
+        extraClaims.put("id", user.getId());
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 

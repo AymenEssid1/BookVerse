@@ -66,6 +66,7 @@ public class BookController {
     }
 
     @GetMapping("/categories")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<String>> getCategories() {
         List<String> categories = Arrays.stream(Category.values())
                 .map(Enum::name)

@@ -2,6 +2,7 @@ package com.aymen.security.user;
 
 
 import com.aymen.security.purchase.cart.Cart;
+import com.aymen.security.purchase.order.Order;
 import com.aymen.security.token.Token;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -43,8 +44,9 @@ public class User implements UserDetails { //implement user details by alt+enter
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private Cart cart;
 
-
-
+   @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
     @Override
     public String toString() {

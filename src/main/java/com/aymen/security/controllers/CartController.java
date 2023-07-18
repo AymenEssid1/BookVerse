@@ -3,9 +3,11 @@ package com.aymen.security.controllers;
 
 import com.aymen.security.purchase.cart.Cart;
 import com.aymen.security.purchase.cart.CartService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
@@ -16,32 +18,35 @@ public class CartController {
 
     @Autowired
     CartService cartService;
-    @GetMapping("/getCartByUser/{userid}")
-    public ResponseEntity<Cart> getcart(@PathVariable Integer userid){
-        try{Cart cart=cartService.getCartByUser(userid);
-        return ResponseEntity.ok(cart);}catch (NotFoundException e) {
+
+
+    @PostMapping("/addToCart")
+    public ResponseEntity<Cart> addToCart(@RequestParam int userId, @RequestParam int bookId) {
+        try {
+            Cart cart = cartService.addToCart(userId, bookId);
+            return ResponseEntity.ok(cart);
+        } catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/addToCart")
-    public ResponseEntity<String> addToCart(@RequestParam("userId") Integer userId, @RequestParam("bookId") Integer bookId) {
-        try {
-            cartService.addToCart(userId, bookId);
-            return ResponseEntity.ok("Book added to cart successfully.");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add book to cart.");
+
+    @GetMapping("/getCartByUser/{userid}")
+    public ResponseEntity<Cart> getcart(@PathVariable Integer userid){
+        try{Cart cart=cartService.getCartByUser(userid);
+            return ResponseEntity.ok(cart);}catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
-
-
     @PostMapping("/removeFromCart")
-    public ResponseEntity<String> removeFromCart(@RequestParam("userId") Integer userId, @RequestParam("bookId") Integer bookId,@RequestParam("deletetype") int deletetype) {
+    public ResponseEntity<Cart> removeFromCart(@RequestParam("userId") Integer userId, @RequestParam("bookId") Integer bookId,@RequestParam("deletetype") int deletetype) {
         try {
-            cartService.deleteFromCart(userId,bookId,deletetype);
-            return ResponseEntity.ok( "good");
+            Cart cart = cartService.deleteFromCart(userId,bookId,deletetype);
+            System.out.println("khedmet");
+            return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("lol u thought");
+            System.out.println("makhedmetch");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }
