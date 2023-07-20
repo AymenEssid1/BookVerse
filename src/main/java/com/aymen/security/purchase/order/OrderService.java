@@ -41,8 +41,8 @@ public class OrderService {
        Order order= orderRepository.getById(order1);
 
         order.setPaymentStatus(PaymentStatus.PAID);
-
         orderRepository.save(order);
+        cartService.emptyCart(order.getUser().getId());
 
     }
 
@@ -53,9 +53,14 @@ public class OrderService {
         for (Item item : cartItems) {
             Book book = item.getBook();
             int quantity = item.getQuantity();
+
+            if(!bookService.checkQuant(book.getId(),quantity)){
+                return null;
+            }
+
             itemMap.put(book, quantity);
         }
-        System.out.println(itemMap);
+       // System.out.println(itemMap);
         // Create the order
         Order order = Order.builder()
                 .user(user)
@@ -85,11 +90,12 @@ public class OrderService {
 
         String result = stringBuilder.toString();
 
-        System.out.println(result);
+       // System.out.println(result);
 
         // Parse the JSON response
         String responseBody = this.createPayment(cart.getTotalPrice(),result,user.getFirstname(), user.getLastname(), user.getEmail());
         JSONObject json = new JSONObject(responseBody);
+       // System.out.println(json);
 
         // Extract specific fields from the JSON object
         String notee = json.getJSONObject("data").getString("note");
@@ -111,7 +117,7 @@ public class OrderService {
         return orderResponse;
     }
 
-    //TODO  OUT OF STOCK ISSUE (RESERVE BOOKS BEFORE PAYMENT)
+
 
 
     private RestTemplate restTemplate = new RestTemplate();
@@ -132,7 +138,7 @@ public class OrderService {
                 "\"first_name\": \"" + firstName + "\", \"last_name\": \"" + lastName + "\", " +
                 "\"email\": \"" + email + "\", \"phone\": \"" + "+21621354227" +"\"," +
                 "\"return_url\": \"https://localhost:4200/front-page\", " +
-                "\"cancel_url\": \"https://www.cancel_url.tn\", \"webhook_url\": \"https://www.webhook_url.tn\", " +
+                "\"cancel_url\": \"https://localhost:4200/front-page\", \"webhook_url\": \"https://www.webhook_url.tn\", " +
                 "\"order_id\": \"244557\"}";
         ;
 

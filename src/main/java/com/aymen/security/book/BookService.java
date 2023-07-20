@@ -131,4 +131,12 @@ public class BookService {
         book.setQuantity(book.getQuantity()+value);
         bookRepository.save(book);
     }
+    //this compares the  quantity  asked for compared to the
+    public boolean checkQuant(Integer bookid ,Integer quant){
+        Book book  = bookRepository.findById(bookid).orElse(null);
+        int OGquant=book.getQuantity();
+        if (quant<OGquant){return true;}
+        return false;
+
+    }
 }

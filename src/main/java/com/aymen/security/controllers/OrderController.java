@@ -39,6 +39,7 @@ public class OrderController {
 
         // Create the order
         OrderResponse order = orderService.createOrder(user);
+        if(order==null){return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(order);}//front ?
 
         // Return a success response
         return ResponseEntity.status(HttpStatus.CREATED).body(order);

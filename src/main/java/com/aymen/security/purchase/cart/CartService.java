@@ -3,8 +3,10 @@ package com.aymen.security.purchase.cart;
 
 import com.aymen.security.book.Book;
 import com.aymen.security.book.BookService;
+import com.aymen.security.purchase.item.Item;
 import com.aymen.security.purchase.item.ItemService;
 import com.aymen.security.user.User;
+import com.aymen.security.user.UserRepository;
 import com.aymen.security.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +23,23 @@ public class CartService {
     BookService bookService;
     @Autowired
     ItemService itemService;
+    @Autowired
+    UserRepository userRepository;
 
 
     public Cart getCartByUser(Integer userid) throws NotFoundException{
 
         Cart cart= cartRepository.getCartByUserId(userid);
-        System.out.println(cart);
-        if(cart==null){ throw new NotFoundException("not found");}
+        User user = userService.getUserById(userid);
+
+
+        if (cart == null) {
+            cart = new Cart();
+            user.setCart(cart);
+           return cartRepository.save(cart);
+
+        }
+
         return cart;
     }
 
@@ -73,5 +85,15 @@ public class CartService {
     }
 
 
+    public void emptyCart(Integer id) {
+        User user = userService.getUserById(id);
+        Cart cart =user.getCart();
+        Cart newCart= new Cart();
+        user.setCart(newCart);
+        userRepository.save(user);
+        cartRepository.delete(cart);
 
+
+
+    }
 }
