@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @GetMapping("/getUserBy/{userId}")
-    @PreAuthorize("hasAuthority('admin:read')")
+    @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read')")
     public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
         User user = userService.getUserById(userId);
         if (user == null) {

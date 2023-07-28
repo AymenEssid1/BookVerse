@@ -119,7 +119,7 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping(value = "/addBookV2", consumes = "multipart/form-data")
+    @PostMapping(value = "/addBookV2", consumes = "multipart/form-data")   //use @modelattribute maybe
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<Book> createBookV2(@RequestBody MultipartFile image,
                                              @RequestParam String name,
@@ -197,15 +197,26 @@ public class BookController {
         }
     }
 
-    @PostMapping("/{bookId}/reviews")
+    @PostMapping("/addRating")
     @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read') ")
     public ResponseEntity<Book>  addReviewToBook(
-            @PathVariable Integer bookId,
+            @RequestParam Integer bookId,
             @RequestParam Integer userId,
             @RequestParam Integer rating) {
 
         Book ch = reviewService.addReviewToBook(bookId, userId, rating);
 
         return ResponseEntity.ok(ch);
+    }
+    @GetMapping("/getReviewByUserAndBook")
+    public ResponseEntity<ReviewInfoDTO> getReviewInfoByUserIdAndBookId(@RequestParam Integer userId,
+                                                                        @RequestParam Integer bookId) {
+        ReviewInfoDTO reviewInfoDTO = reviewService.getReviewInfoByUserIdAndBookId(userId, bookId);
+
+        if (reviewInfoDTO != null) {
+            return ResponseEntity.ok(reviewInfoDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

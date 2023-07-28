@@ -29,4 +29,14 @@ public class Review {
 
     private Integer rating;
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", user='" + user.getId() +
+                ", book='" + book.getId() +
+                ", rating='" + rating  +
+                '}';
+    }
+
 }

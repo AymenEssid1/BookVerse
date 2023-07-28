@@ -135,7 +135,7 @@ public class BookService {
     public boolean checkQuant(Integer bookid ,Integer quant){
         Book book  = bookRepository.findById(bookid).orElse(null);
         int OGquant=book.getQuantity();
-        if (quant<OGquant){return true;}
+        if (quant<=OGquant){return true;}
         return false;
 
     }

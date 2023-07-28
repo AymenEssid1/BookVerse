@@ -28,6 +28,7 @@ public class Book {
     private Integer id;
     private String name;
     private String author;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private double price;
     private int quantity;

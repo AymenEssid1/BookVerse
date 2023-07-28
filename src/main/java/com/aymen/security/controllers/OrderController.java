@@ -33,15 +33,28 @@ public class OrderController {
 
     }
     @PostMapping("/create")
-    public ResponseEntity<OrderResponse> createOrder(@RequestParam Integer id) {
+    public ResponseEntity<?> createOrder(@RequestParam Integer id) {
         // Get the authenticated user
         User user = userService.getUserById(id);
 
         // Create the order
-        OrderResponse order = orderService.createOrder(user);
-        if(order==null){return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(order);}//front ?
+        Object result = orderService.createOrder(user);
+        if (result instanceof String) {
+            String bookerror = (String) result;
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(bookerror);
+        } else if (result instanceof OrderResponse) {
+            OrderResponse order = (OrderResponse) result;
+            return ResponseEntity.status(HttpStatus.CREATED).body(order);
+        }
+       return ResponseEntity.status(HttpStatus.CREATED).body("hello");
 
-        // Return a success response
-        return ResponseEntity.status(HttpStatus.CREATED).body(order);
+    }
+    @GetMapping("/getAllorders")
+    public ResponseEntity<List<Order>> orders(){
+
+        List<Order>lista= orderService.getOrders();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(lista);
+
     }
 }

@@ -36,6 +36,11 @@ public class OrderService {
 
 
     }
+    public List<Order> getOrders(){
+        return orderRepository.findAll();
+
+
+    }
 
     public void purchaseComplete(Integer order1){
        Order order= orderRepository.getById(order1);
@@ -46,20 +51,23 @@ public class OrderService {
 
     }
 
-    public  OrderResponse createOrder(User user) {
+    public  Object createOrder(User user) {
         Cart cart = cartService.getCartByUser(user.getId());
         List<Item> cartItems = cart.getItems();
+        String outOfStockBook ="";
         Map<Book, Integer> itemMap = new HashMap<>();
         for (Item item : cartItems) {
             Book book = item.getBook();
             int quantity = item.getQuantity();
 
             if(!bookService.checkQuant(book.getId(),quantity)){
-                return null;
+                outOfStockBook=book.getName();
+                return outOfStockBook;
             }
 
             itemMap.put(book, quantity);
         }
+
        // System.out.println(itemMap);
         // Create the order
         Order order = Order.builder()
@@ -114,6 +122,9 @@ public class OrderService {
         System.out.println("payURL: " + payment_url);
 
         OrderResponse orderResponse = new OrderResponse(order, payment_url,token);
+
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaah"+orderResponse.getUrl());
+
         return orderResponse;
     }
 

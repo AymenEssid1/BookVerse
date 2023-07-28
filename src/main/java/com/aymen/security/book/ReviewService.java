@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ReviewService {
@@ -65,6 +68,19 @@ public class ReviewService {
         }
 
         bookRepository.save(book);
+    }
+
+    public ReviewInfoDTO getReviewInfoByUserIdAndBookId(Integer userId, Integer bookId) {
+        Review review = reviewRepository.findByUserIdAndBookId(userId, bookId);
+        if (review != null) {
+            ReviewInfoDTO reviewInfoDTO = new ReviewInfoDTO();
+            reviewInfoDTO.setUserId(review.getUser().getId());
+            reviewInfoDTO.setBookId(review.getBook().getId());
+            reviewInfoDTO.setRating(review.getRating());
+            return reviewInfoDTO;
+        } else {
+            return null;
+        }
     }
 
 }
