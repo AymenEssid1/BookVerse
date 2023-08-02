@@ -8,6 +8,7 @@ import com.aymen.security.purchase.item.ItemService;
 import com.aymen.security.user.User;
 import com.aymen.security.user.UserRepository;
 import com.aymen.security.user.UserService;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
@@ -27,7 +28,7 @@ public class CartService {
     UserRepository userRepository;
 
 
-    public Cart getCartByUser(Integer userid) throws NotFoundException{
+    public Cart getCartByUser(Integer userid) throws NotFoundException, UserNotFoundException {
 
         Cart cart= cartRepository.getCartByUserId(userid);
         User user = userService.getUserById(userid);
@@ -43,7 +44,7 @@ public class CartService {
         return cart;
     }
 
-    public Cart addToCart(Integer userId, Integer bookId) throws NotFoundException {
+    public Cart addToCart(Integer userId, Integer bookId) throws NotFoundException,UserNotFoundException {
 
         User user = userService.getUserById(userId);
         Book book = bookService.getBookById(bookId).orElse(null);
@@ -64,7 +65,7 @@ public class CartService {
         return cart;
     }
 
-    public Cart deleteFromCart (Integer userId, Integer bookId,int deletetype) throws NotFoundException {
+    public Cart deleteFromCart (Integer userId, Integer bookId,int deletetype) throws NotFoundException,UserNotFoundException {
 
         User user = userService.getUserById(userId);
         Book book = bookService.getBookById(bookId).orElse(null);
@@ -85,7 +86,7 @@ public class CartService {
     }
 
 
-    public void emptyCart(Integer id) {
+    public void emptyCart(Integer id) throws UserNotFoundException {
         User user = userService.getUserById(id);
         Cart cart =user.getCart();
         Cart newCart= new Cart();

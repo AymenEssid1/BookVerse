@@ -7,6 +7,7 @@ import com.aymen.security.auth.RegisterRequest;
 import com.aymen.security.user.Role;
 import com.aymen.security.user.User;
 import com.aymen.security.user.UserService;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +61,7 @@ public class UserController {
 
     @GetMapping("/getUserBy/{userId}")
     @PreAuthorize("hasAuthority('admin:read') OR hasAuthority('user:read')")
-    public ResponseEntity<User> getUserById(@PathVariable Integer userId) {
+    public ResponseEntity<User> getUserById(@PathVariable Integer userId) throws UserNotFoundException {
         User user = userService.getUserById(userId);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -70,7 +71,7 @@ public class UserController {
 
     @PutMapping("/updateUser/{userId}")
     @PreAuthorize("hasAuthority('admin:update')")
-    public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User updatedUser) {
+    public ResponseEntity<User> updateUser(@PathVariable Integer userId, @RequestBody User updatedUser) throws UserNotFoundException {
         User existingUser = userService.getUserById(userId);
 
         if (existingUser == null) {

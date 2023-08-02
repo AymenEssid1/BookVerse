@@ -57,7 +57,8 @@ public class SecurityConfiguration {
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-ui.html",
-                        "/api/v1/book/image/*"
+                        "/api/v1/book/image/*",
+                        "/wss/**"
 
                 )   //whitelist these no auth required
                 .permitAll()

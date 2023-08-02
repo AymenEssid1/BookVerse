@@ -2,10 +2,13 @@ package com.aymen.security.user;
 
 
 import com.aymen.security.purchase.cart.CartRepository;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -29,12 +32,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUserById(Integer userId) {
-        return userRepository.findById(userId).orElse(null);
+    public User getUserById(Integer userId) throws UserNotFoundException {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
     }
+
 
     public User updateUser(User user) {
         return userRepository.save(user);
     }
+
+
 
 }
