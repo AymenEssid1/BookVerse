@@ -4,6 +4,7 @@ package com.aymen.security.user;
 import com.aymen.security.purchase.cart.Cart;
 import com.aymen.security.purchase.order.Order;
 import com.aymen.security.token.Token;
+import com.aymen.security.zchat.Message;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,13 +45,16 @@ public class User implements UserDetails { //implement user details by alt+enter
     @OneToOne(cascade = CascadeType.ALL,orphanRemoval = true)
     private Cart cart;
 
-   @JsonIgnore
+
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+
 
     @Override
     public String toString() {
         return "User{" +
+                "id='" + id + '\'' +
                 "firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +

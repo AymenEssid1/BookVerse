@@ -22,5 +22,8 @@ public interface ChatService {
     void deleteChatById(Integer id) throws ChatNotFoundException;
 
 
+    public Chat findChatByBothUsers(Integer id1,Integer id2) throws ChatAlreadyExistException, UserNotFoundException ;
+
+    public List<Chat> findAdminChats(Integer id1) ;
 
 }

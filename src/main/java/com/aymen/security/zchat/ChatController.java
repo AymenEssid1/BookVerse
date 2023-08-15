@@ -3,11 +3,13 @@ package com.aymen.security.zchat;
 import com.aymen.security.zchat.exceptions.*;
 import com.aymen.security.zchat.services.ChatService;
 import com.aymen.security.zchat.services.MessageService;
+import com.aymen.security.zchat.websocket.MessageWithUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,12 +41,34 @@ public class ChatController {
         }
     }
 
+    @GetMapping("/adminChat")
+    public ResponseEntity<List<Chat>> getAdminChats(@RequestParam Integer id) {
+
+            List<Chat> chats = chatService.findAdminChats(id);
+            return ResponseEntity.ok(chats);
+        }
+
+
     @GetMapping("/getById")
     public ResponseEntity<Chat> getChatById(@RequestParam Integer id) {
         try {
             Chat chat = chatService.findChatById(id);
             return ResponseEntity.ok(chat);
         } catch (ChatNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/getByBoth")
+    public ResponseEntity<Chat> getChatByBoth(@RequestParam Integer id1, @RequestParam Integer id2) {
+        try {
+            Chat chat = chatService.findChatByBothUsers(id1, id2);
+            return ResponseEntity.ok(chat);
+        } catch (ChatAlreadyExistException e) {
+            // Handle the ChatAlreadyExistException
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // Return a 409 Conflict status code, for example.
+
+        } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -78,14 +102,37 @@ public class ChatController {
     }
 
     @GetMapping("/messages")
-    public ResponseEntity<List<Message>> getMessagesByChatId(@RequestParam Integer chatId) {
+    public ResponseEntity<List<MessageWithUserDTO>> getMessagesByChatId(@RequestParam Integer chatId) {
         try {
             List<Message> messages = messageService.getMessagesByChatId(chatId);
-            return new ResponseEntity<>(messages, HttpStatus.OK);
-        } catch (ChatNotFoundException e) {
 
+            // Convert List<Message> to List<MessageWithUserDTO>
+            List<MessageWithUserDTO> messageDTOs = convertToMessageWithUserDTOList(messages);
+
+            return new ResponseEntity<>(messageDTOs, HttpStatus.OK);
+        } catch (ChatNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // Helper method to convert List<Message> to List<MessageWithUserDTO>
+    private List<MessageWithUserDTO> convertToMessageWithUserDTOList(List<Message> messages) {
+        List<MessageWithUserDTO> messageDTOs = new ArrayList<>();
+
+        for (Message message : messages) {
+            MessageWithUserDTO messageDTO = new MessageWithUserDTO();
+            messageDTO.setId(message.getId());
+            messageDTO.setTime(message.getTime());
+            messageDTO.setContent(message.getContent());
+
+            // Include the email of the user (sender)
+            messageDTO.setEmail(message.getSender().getEmail());
+
+            messageDTOs.add(messageDTO);
+        }
+
+        return messageDTOs;
+    }
+
 
 }

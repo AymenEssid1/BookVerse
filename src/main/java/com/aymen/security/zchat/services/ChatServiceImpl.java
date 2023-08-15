@@ -70,5 +70,20 @@ public class ChatServiceImpl implements ChatService {
 
     }
 
+    @Override
+    public Chat findChatByBothUsers(Integer id1, Integer id2) throws ChatAlreadyExistException, UserNotFoundException {
+        Chat chat =chatRepository.findChatByUserIds(id1,id2);
+        if( chat ==null){
+            return this.addChat(id1,id2);
+        }
+        return chat;
+    }
+
+    @Override
+    public List<Chat> findAdminChats(Integer id1) {
+       List<Chat> chats= chatRepository.findAdmiChats(id1);
+       return chats;
+    }
+
 
 }

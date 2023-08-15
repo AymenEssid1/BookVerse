@@ -27,20 +27,37 @@ public class MessageServiceImpl implements  MessageService{
     private ChatService chatService;
 
     @Override
+    public void markAllMessagesAsRead(Integer chatId) {
+        List<Message> unreadMessages = messageRepository.findByChatIdAndRead(chatId, 0);
+        for (Message message : unreadMessages) {
+            message.setRead(1);
+            messageRepository.save(message);
+        }
+    }
+
+    @Override
     public Message addMessage(Integer senderId, Integer chatId, String content) throws ChatNotFoundException, UserNotFoundException,NotPartOfChatException {
         User sender = userService.getUserById(senderId);
+       System.out.println(sender.getId());
 
         Chat chat = chatService.findChatById(chatId);
+       // System.out.println("chatid:"+chat.getId());
+       // System.out.println("user1 id :"+chat.getUser1().getId());
+        //System.out.println("user2 id :"+chat.getUser2().getId());
 
-        if(chat.getUser1()==sender||chat.getUser2()==sender){
+        if(chat.getUser1().getId().equals(sender.getId()) || chat.getUser2().getId().equals(sender.getId())){
+            System.out.println("good");
             Message message = new Message();
             message.setSender(sender);
             message.setChat(chat);
             message.setContent(content);
             message.encryptContent();
+            System.out.println(message);
             return messageRepository.save(message);
         }
-        else throw new NotPartOfChatException();
+        else {
+            System.out.println(chat.getUser1().getId().equals(sender.getId()) || chat.getUser2().getId().equals(sender.getId()));
+            throw new NotPartOfChatException();}
     }
 
     @Override

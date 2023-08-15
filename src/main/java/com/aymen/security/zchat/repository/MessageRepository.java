@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
     public List<Message> findByChatOrderByTime(Chat chat);
+    public  List<Message> findByChatIdAndRead(Integer chatId, int bool);
 }

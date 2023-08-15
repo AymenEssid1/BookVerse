@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface MessageService {
 
+    void markAllMessagesAsRead(Integer chatId);
+
     Message addMessage(Integer senderId, Integer chatId, String content) throws ChatNotFoundException, UserNotFoundException, NotPartOfChatException;
     List<Message> getMessagesByChatId(Integer chatId) throws ChatNotFoundException;
 }
