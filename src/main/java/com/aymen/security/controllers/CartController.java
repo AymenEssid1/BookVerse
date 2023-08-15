@@ -3,6 +3,7 @@ package com.aymen.security.controllers;
 
 import com.aymen.security.purchase.cart.Cart;
 import com.aymen.security.purchase.cart.CartService;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class CartController {
 
 
     @PostMapping("/addToCart")
-    public ResponseEntity<Cart> addToCart(@RequestParam int userId, @RequestParam int bookId) {
+    public ResponseEntity<Cart> addToCart(@RequestParam int userId, @RequestParam int bookId) throws UserNotFoundException {
         try {
             Cart cart = cartService.addToCart(userId, bookId);
             return ResponseEntity.ok(cart);
@@ -32,14 +33,14 @@ public class CartController {
 
 
     @GetMapping("/getCartByUser/{userid}")
-    public ResponseEntity<Cart> getcart(@PathVariable Integer userid){
+    public ResponseEntity<Cart> getcart(@PathVariable Integer userid) throws UserNotFoundException{
         try{Cart cart=cartService.getCartByUser(userid);
             return ResponseEntity.ok(cart);}catch (NotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
     @PostMapping("/removeFromCart")
-    public ResponseEntity<Cart> removeFromCart(@RequestParam("userId") Integer userId, @RequestParam("bookId") Integer bookId,@RequestParam("deletetype") int deletetype) {
+    public ResponseEntity<Cart> removeFromCart(@RequestParam("userId") Integer userId, @RequestParam("bookId") Integer bookId,@RequestParam("deletetype") int deletetype) throws UserNotFoundException{
         try {
             Cart cart = cartService.deleteFromCart(userId,bookId,deletetype);
             System.out.println("khedmet");

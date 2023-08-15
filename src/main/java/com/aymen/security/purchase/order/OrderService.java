@@ -3,20 +3,22 @@ package com.aymen.security.purchase.order;
 
 import com.aymen.security.book.Book;
 import com.aymen.security.book.BookService;
+import com.aymen.security.controllers.OrderController;
 import com.aymen.security.purchase.cart.Cart;
 import com.aymen.security.purchase.cart.CartService;
 import com.aymen.security.purchase.item.Item;
 import com.aymen.security.user.User;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,10 @@ public class OrderService {
     BookService bookService;
 
     public List<Order> getOrders(Integer id){
+        final Logger logger = LoggerFactory.getLogger(OrderController.class);
+        logger.info("aaaaaaaaaaaaaaaaaaaaaaaaaaa");
        return orderRepository.findByUserId(id);
+
 
 
     }
@@ -42,7 +47,7 @@ public class OrderService {
 
     }
 
-    public void purchaseComplete(Integer order1){
+    public void purchaseComplete(Integer order1) throws UserNotFoundException {
        Order order= orderRepository.getById(order1);
 
         order.setPaymentStatus(PaymentStatus.PAID);
@@ -51,7 +56,7 @@ public class OrderService {
 
     }
 
-    public  Object createOrder(User user) {
+    public  Object createOrder(User user) throws  UserNotFoundException{
         Cart cart = cartService.getCartByUser(user.getId());
         List<Item> cartItems = cart.getItems();
         String outOfStockBook ="";

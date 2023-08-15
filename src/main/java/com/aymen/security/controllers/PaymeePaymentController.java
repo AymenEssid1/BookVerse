@@ -4,6 +4,7 @@ import com.aymen.security.purchase.cart.CartService;
 import com.aymen.security.purchase.order.Order;
 import com.aymen.security.purchase.order.OrderResponse;
 import com.aymen.security.purchase.order.OrderService;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -31,7 +32,7 @@ public class PaymeePaymentController {
 
     @RequestMapping(value = "check", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> checkPaymentStatus(@RequestParam Integer orderid, @RequestParam String token) {
+    public ResponseEntity<Map<String, Object>> checkPaymentStatus(@RequestParam Integer orderid, @RequestParam String token) throws UserNotFoundException {
         String url = "https://sandbox.paymee.tn/api/v1/payments/" + token + "/check";
 
         headers.setContentType(MediaType.APPLICATION_JSON);

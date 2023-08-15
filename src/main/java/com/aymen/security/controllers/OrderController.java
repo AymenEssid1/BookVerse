@@ -5,6 +5,7 @@ import com.aymen.security.purchase.order.OrderResponse;
 import com.aymen.security.purchase.order.OrderService;
 import com.aymen.security.user.User;
 import com.aymen.security.user.UserService;
+import com.aymen.security.zchat.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class OrderController {
 
     }
     @PostMapping("/create")
-    public ResponseEntity<?> createOrder(@RequestParam Integer id) {
+    public ResponseEntity<?> createOrder(@RequestParam Integer id) throws UserNotFoundException {
         // Get the authenticated user
         User user = userService.getUserById(id);
 
